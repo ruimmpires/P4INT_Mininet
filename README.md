@@ -5,10 +5,11 @@ You can find a similar version running in P4PI, i.e. P4 for RaspBerry PI in http
 ## WHY
 This is an SDN implementation of P4 INT-MD for bmv2 in mininet.
 This project is ongoing until hopefuly July 2023 as part of my thesis "SECURITY FOR SDN ENVIRONMENTS WITH P4" to be also available publicly.
-The code is mostly not original and you may find most of it in the repositories of:
+The code is mostly not original and you may find most of it in the following repositories:
 - https://github.com/lifengfan13/P4-INT
 - https://github.com/GEANT-DataPlaneProgramming/int-platforms
 - https://github.com/mandaryoshi/p4-int. You may also check the Mandar Joshi's thesis "Implementation and evaluation of INT in P4" here https://www.diva-portal.org/smash/get/diva2:1609265/FULLTEXT01.pdf.
+- https://github.com/p4lang/p4pi/blob/master/packages/p4pi-examples/bmv2/arp_icmp/arp_icmp.p4
 
 ## INTRODUCTION
 
@@ -36,11 +37,17 @@ In this scenario,the INT flow can be described in the following steps:
 You may disregard everything above and quickly start this mininet environment.
 ### Requirements
 Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
+**Install Influxdb:**
+1. dsds
+2. 
+**Install Graphana**
+1. dsds
+2. 
 ### Steps
 1. clone this repository to your machine or VM
 2. change directory to the new P4INT_Mininet folder
 3. type ```make run```
-4. in the mininet CLI interface type ```mininet> xterm h1 h2 h3```
+4. in the mininet CLI interface type mininet> ```xterm h1 h2 h3```
 5. in another terminal window, start the collector with ```sudo python3 receive/collector_influxdb.py``` 
 6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
 7. in the h1 type ```./send/h1.sh```  which sends traffic from h1 and creates INT statistics
