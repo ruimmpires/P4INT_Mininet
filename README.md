@@ -16,7 +16,7 @@ SDN with P4 brings a new set of possibilities as the way the packets are process
 
 ## TOPOLOGY
 
-
+![Scenario in Mininet](/pictures/int_scenario4_INT_MD.png)
 
 ## HOW TO USE
 
