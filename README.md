@@ -20,18 +20,30 @@ As a away to mimic a standard topology in a data center, we have chosen the leaf
 
 In this scenario,the INT flow can be described in the following steps:
 1. Source data: one host, e.g. client h1 or h3, sends some data to a server, h2, through a P4 network.
-2. INT source: if the data sent from the clients matches the pre-programmed watchlist, then the switch, s1 or s5, adds the INT header and payload to this
-packet.
+2. INT source: if the data sent from the clients matches the pre-programmed watchlist, then the switch, s1 or s5, adds the INT header and payload to this packet.
 3. INT transit. The transit switches, s2 or s4, add their INT info to the same packet.
 4. INT sink. The sink switch, s3, also adds its INT info to the same packet, but then strips all info and sends the original data to the server, h2. The INT information, of the 3 servers, is encapsulated in a UDP packet towards the INT collector.
 
 
 
 
+## 
+
 ## HOW TO USE
 
 
-### 
+### QUICK SETUP
+You may disregard everything above and quickly start this mininet environment.
+### Requirements
+Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
+### Steps
+1. clone this repository to your machine or VM
+2. change directory to the new P$INT_Mininet folder
+3. type ```make run```
+4. in the mininet CLI interface type ```Run the P4 code as follows```
+```
+$SDE/run_switchd.sh -p int_md_2_1
+```
 
 ...
 Run the P4 code as follows
@@ -45,5 +57,6 @@ $SDE/run_switchd.sh -p int_md_2_1
 ### Collection of reports
 
 ### Visualization
+If you have access to the FCTUC/DEI VPN or are locally connected, you may see the stas here http://10.254.0.171:3000/d/V8Ss1QY4k/int-statistics?orgId=1&refresh=1m&from=now-15m&to=now with the credentials readonly/readonly.
 
 ## Testing
