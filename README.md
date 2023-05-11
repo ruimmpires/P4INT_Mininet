@@ -38,18 +38,15 @@ You may disregard everything above and quickly start this mininet environment.
 Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
 ### Steps
 1. clone this repository to your machine or VM
-2. change directory to the new P$INT_Mininet folder
+2. change directory to the new P4INT_Mininet folder
 3. type ```make run```
-4. in the mininet CLI interface type ```Run the P4 code as follows```
-```
-$SDE/run_switchd.sh -p int_md_2_1
-```
+4. in the mininet CLI interface type ```mininet> xterm h1 h2 h3```
+5. in another terminal window, start the collector with ```sudo python3 receive/collector_influxdb.py``` 
+6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
+7. in the h1 type ```./send/h1.sh```  which sends traffic from h1 and creates INT statistics
+8. in the h3 type ```./send/h3.sh```  which sends traffic from h3 and creates INT statistics
+9. 
 
-...
-Run the P4 code as follows
-```
-$SDE/run_switchd.sh -p int_md_2_1
-```
 
 
 ### Requirements
