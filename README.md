@@ -11,6 +11,7 @@ The code is mostly not original and you may find most of it in the following rep
 - https://github.com/GEANT-DataPlaneProgramming/int-platforms
 - https://github.com/mandaryoshi/p4-int. You may also check the Mandar Joshi's thesis "Implementation and evaluation of INT in P4" here https://www.diva-portal.org/smash/get/diva2:1609265/FULLTEXT01.pdf.
 - https://github.com/p4lang/p4pi/blob/master/packages/p4pi-examples/bmv2/arp_icmp/arp_icmp.p4
+
 You may also look into the official INT code available in the [p4 official repository for INT](https://github.com/p4lang/p4factory/tree/master/apps/int)
 
 
@@ -33,7 +34,7 @@ This scenario can thus be split in the following parts:
 3. rogue host attacks;
 4. detection and protection against a rogue host.
 
-This network is simulated in mininet. Search here for more information in the [Mininet waltk trhough](http://mininet.org/walkthrough/)
+This network is simulated in mininet. Search here for more information in the [Mininet waltkthrough](http://mininet.org/walkthrough/)
 
 ## SIMULATE INT PLATFORM
 This platform must create INT statistics and send those to the collector. In this scenario, if the data sent by h1 matches the watch list, then there will be some INT statistics generated and sent to h4.
@@ -41,7 +42,11 @@ As part of the scenario, the h2 server is simulating 3 services: PostgreSQL, HTT
 ### Packet source
 NT packets are only generated if a specific packet matches the watchlist. So, we used the scapy library within a python script to craft the packets. This is a simple script that takes as input parameters the destination IP, the l4 protocol UDP/TCP, the destination port number, an optional message and the number of packets sent. Additionally, we included a command to simulate recurrent accesses to the server, e.g., every 5 seconds access to HTTPS, from the h1 and h3 hosts’ CLI:
 ```watch -n 5 python3 send.py --ip 10.0.3.2 -l4 udp --port 443 --m INTH1 --c 1```
+
 You can find ready-made scripts for h1 and h3 in [h1 to h2](send/h1.sh) and [h3 to h4](send/h1.sh)
+
+You may search for information about the scapy in the [The Art of Packet Crafting with Scapy](https://0xbharath.github.io/art-of-packet-crafting-with-scapy/scapy/sending_recieving/index.html)
+
 ### Packet forwarding
 The L3 forwarding tables are pre-established in the switches with MAT using Longest Prefix Match (LPM). So the hosts h1, h2 and h3 are pre-registered in each switch’s MAT as e,g, for s2:
 ```
