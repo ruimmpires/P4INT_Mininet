@@ -12,7 +12,6 @@ The code is mostly not original and you may find most of it in the following rep
 - https://github.com/p4lang/p4pi/blob/master/packages/p4pi-examples/bmv2/arp_icmp/arp_icmp.p4
 
 ## INTRODUCTION
-
 SDN with P4 brings a new set of possibilities as the way the packets are processed is not defined by the vendor, but rather by the P4 program. Using this language, developers can define data plane behavior, specifying how switches shall process the packets. P4 lets developers define which headers a switch shall parse, how tables match on each header, and which actions the switch shall perform on each header. This new programmability extends the capabilities of the data plane into security features, such as stateful packet inspection and filtering, thus relieving the control plane. This offloading of security is enhanced by the ability to run at line speed as P4 runs on the programmed devices.
 
 ## TOPOLOGY
@@ -35,12 +34,12 @@ In this scenario,the INT flow can be described in the following steps:
 
 ### QUICK SETUP
 You may disregard everything above and quickly start this mininet environment.
-### Requirements
+#### Pre-requisites
 Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
 sudo apt install bridge-utils
-**Install Influxdb:**
+#### Install Influxdb
 1. Install influxdb with https://docs.influxdata.com/influxdb/v1.8/introduction/install/
-2. create the int databases
+2. create the int database
 ```
 ~$ influx
 Connected to http://localhost:8086 version 1.8.10
@@ -55,7 +54,22 @@ _internal
 Using database int
 > show measurements
 ```
-note: after having successfully generated INT stats and uploaded to the int database, you may check with:
+No measurements are there yet. These will be created when the data is uploaded.
+#### Install Graphana
+Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
+
+### Steps
+1. clone this repository to your machine or VM
+2. change directory to the new P4INT_Mininet folder
+3. type ```make run```
+4. in the mininet CLI interface type mininet> ```xterm h1 h2 h3```
+5. in another terminal window, start the collector with ```sudo python3 receive/collector_influxdb.py``` 
+6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
+7. in the h1 type ```./send/h1.sh```  which sends traffic from h1 and creates INT statistics
+8. in the h3 type ```./send/h3.sh```  which sends traffic from h3 and creates INT statistics
+
+#### Check InfluxDB
+After having successfully generated INT stats and uploaded to the int database, you may check with:
 ```
 ~$ influx
 Connected to http://localhost:8086 version 1.8.10
@@ -75,21 +89,17 @@ time                dst_ip   dst_port protocol src_ip   src_port value
 ----                ------   -------- -------- ------   -------- -----
 1683387986735098368 10.0.3.2 80       17       10.0.1.1 57347    3666
 ```
-4. ...
-5. ...
-**Install Graphana**
-1. Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
-2. 
-### Steps
-1. clone this repository to your machine or VM
-2. change directory to the new P4INT_Mininet folder
-3. type ```make run```
-4. in the mininet CLI interface type mininet> ```xterm h1 h2 h3```
-5. in another terminal window, start the collector with ```sudo python3 receive/collector_influxdb.py``` 
-6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
-7. in the h1 type ```./send/h1.sh```  which sends traffic from h1 and creates INT statistics
-8. in the h3 type ```./send/h3.sh```  which sends traffic from h3 and creates INT statistics
-9. 
+You may also check the logs with ```sudo journalctl -u influxdb.service | grep “POST /write”```
+
+#### Add the InfluxDB datasource
+1.  In the Graphana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
+2.  Select the database int
+3.  Test and all is ok, you will see the message ![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
+
+
+
+
+### 
 
 
 
