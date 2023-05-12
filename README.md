@@ -74,7 +74,7 @@ These MATs are already done:
 * [table for s4](tables/s4-commands.txt)
 * [table for s5](tables/s5-commands.txt)
 ### INT source
-The INT source switch must identify the flows via its watchlist. When there is a match, the switch adds the INT header and its INT data accordingly. In this lab, the source switches are s1 and s5. The code below is the configuration of switch s1, which defines the switch ID, the INT domain and the matchlist.
+The INT source switch must identify the flows via its watchlist. When there is a match, the switch adds the INT header and its INT data accordingly. In this lab, the source switches are s1 and s5. The code below is the configuration of switch s1, which defines the switch ID, the INT domain and the watchlist.
 ```
 //set up ipv4_lpm table
 table_add l3_forward.ipv4_lpm ipv4_forward 10.0.1.1/32 => 00:00:0a:00:01:01 1
@@ -97,8 +97,7 @@ The last line includes:
 • int-instruction-bitmap - instruction mask defining which information (INT headers types) must added to the packet;
 • table-entry-priority - general priority of entry in match table (not related to INT)
 
-
-
+More information about [https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md](https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md#adding-4-tuple-flow-to-the-int-watchlist).
 
 
 ### Attacks
