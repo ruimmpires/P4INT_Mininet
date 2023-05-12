@@ -18,6 +18,18 @@ You may also look into the official INT code available in the [p4 official repos
 ## INTRODUCTION
 SDN with P4 brings a new set of possibilities as the way the packets are processed is not defined by the vendor, but rather by the P4 program. Using this language, developers can define data plane behavior, specifying how switches shall process the packets. P4 lets developers define which headers a switch shall parse, how tables match on each header, and which actions the switch shall perform on each header. This new programmability extends the capabilities of the data plane into security features, such as stateful packet inspection and filtering, thus relieving the control plane. This offloading of security is enhanced by the ability to run at line speed as P4 runs on the programmed devices.
 
+You may find some courses in universities such as:
+* [Stanford Building an Internet Router](https://cs344-stanford.github.io/documentation/internet-router/)
+* https://p4campus.cs.princeton.edu/
+* https://www.princeton.edu/~hyojoonk/
+
+Find below the specs:
+* [P4Runtime Specification](https://p4.org/p4-spec/p4runtime/main/P4Runtime-Spec.html#sec-client-arbitration-and-controller-replication)
+* [P416 Language Specification working spec](https://p4.org/p4-spec/docs/P4-16-working-spec.html)
+* [P416 Language Specification version 1.2.3](https://p4.org/p4-spec/docs/P4-16-v1.2.3.pdf)
+* [In-band Network Telemetry (INT) Dataplane Specification Version 2.1](https://p4.org/p4-spec/docs/INT_v2_1.pdf)
+* [INT spec source](https://github.com/p4lang/p4-applications/tree/master/telemetry/specs)
+
 ## TOPOLOGY
 As a away to mimic a standard topology in a data center, we have chosen the leaf-and-spine architecture as described in the figure.
 ![Scenario in Mininet](/pictures/int_scenario4_INT_MD.png)
@@ -84,6 +96,29 @@ The last line includes:
 • int-hop-instruction-cnt - how many INT headers must be added by a single INT node;
 • int-instruction-bitmap - instruction mask defining which information (INT headers types) must added to the packet;
 • table-entry-priority - general priority of entry in match table (not related to INT)
+
+
+
+
+
+### Attacks
+
+#### MITM attack
+Etttercap is probably the best tool to do such attacks, so we needed to be acquainted with these sources:
+* https://linux.die.net/man/8/ettercap
+* https://github.com/Ettercap/ettercap/wiki/Providing-debug-information
+* https://github.com/Ettercap/ettercap/issues/1121
+
+
+
+#### Replay attack
+https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
+
+
+
+
+
+
 
 ## HOW TO USE
 
