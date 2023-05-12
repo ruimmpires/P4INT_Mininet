@@ -39,9 +39,11 @@ NT packets are only generated if a specific packet matches the watchlist. So, we
 You can find ready-made scripts for h1 and h3 in [h1 to h2](send/h1.sh) and [h3 to h4](send/h1.sh)
 ### Packet forwarding
 The L3 forwarding tables are pre-established in the switches with MAT using Longest Prefix Match (LPM). So the hosts h1, h2 and h3 are pre-registered in each switch’s MAT as e,g, for s2:
-```table_add l3_forward.ipv4_lpm ipv4_forward 10.0.1.1/32 => 00:00:0a:00:01:01 1
+```
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.1.1/32 => 00:00:0a:00:01:01 1
 table_add l3_forward.ipv4_lpm ipv4_forward 10.0.3.2/32 => 00:00:0a:00:03:02 2
-table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 3```
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 3
+```
 The hosts h4 and h5 are not required to have routing.
 These MATs are already done:
 * [table for s1](tables/s1-commands.txt)
