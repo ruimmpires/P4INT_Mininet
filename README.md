@@ -41,7 +41,7 @@ sudo apt install bridge-utils
 **Install Influxdb:**
 1. Install influxdb with https://docs.influxdata.com/influxdb/v1.8/introduction/install/
 2. create the int databases
-'''
+```
 ~$ influx
 Connected to http://localhost:8086 version 1.8.10
 InfluxDB shell version: 1.8.10
@@ -54,9 +54,9 @@ _internal
 > use int
 Using database int
 > show measurements
-'''
+```
 note: after having successfully generated INT stats and uploaded to the int database, you may check with:
-'''
+```
 ~$ influx
 Connected to http://localhost:8086 version 1.8.10
 InfluxDB shell version: 1.8.10
@@ -74,7 +74,7 @@ name: flow_latency
 time                dst_ip   dst_port protocol src_ip   src_port value
 ----                ------   -------- -------- ------   -------- -----
 1683387986735098368 10.0.3.2 80       17       10.0.1.1 57347    3666
-'''
+```
 4. ...
 5. ...
 **Install Graphana**
