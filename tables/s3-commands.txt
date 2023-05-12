@@ -1,0 +1,26 @@
+//creates a mirroring ID 500 to output port specified
+mirroring_add 500 2
+
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.1.1/32 => 00:00:0a:00:01:01 4
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.3.2/32 => 00:00:0a:00:03:02 1
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 5
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.3.4/32 => 00:00:0a:00:03:04 2
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.3.5/32 => 00:00:0a:00:03:05 3
+
+//set up process_int_source_sink
+table_add process_int_source_sink.tb_set_sink int_set_sink 1 => 
+
+//INT report setup towards the INT collector
+//table_add process_int_report.tb_generate_report do_report_encapsulation => 00:01:0a:00:03:07 00:01:0a:00:03:0A 10.0.0.1 10.0.0.2 1234
+table_add process_int_report.tb_generate_report do_report_encapsulation => 00:01:0a:00:03:05 00:00:0a:00:03:04 10.0.3.254 10.0.3.4 1234
+
+
+//set up switch ID
+table_set_default process_int_transit.tb_int_insert init_metadata 3
+
+
+//ARP
+table_add arpreply.arp_exact arp_reply 10.0.3.2 => 00:00:0a:00:03:02
+table_add arpreply.arp_exact arp_reply 10.0.3.4 => 00:00:0a:00:03:04
+table_add arpreply.arp_exact arp_reply 10.0.3.5 => 00:00:0a:00:03:05
+table_add arpreply.arp_exact arp_reply 10.0.3.254 => 00:01:0a:00:03:05
