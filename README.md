@@ -2,6 +2,7 @@
 SDN P4 INT deployed in Mininet and security analysis
 You can find a similar version running in P4PI, i.e. P4 for RaspBerry PI in https://github.com/ruimmpires/P4INT_P4PI
 
+
 ## WHY
 This is an SDN implementation of P4 INT-MD for bmv2 in mininet.
 This project is ongoing until hopefuly July 2023 as part of my thesis "SECURITY FOR SDN ENVIRONMENTS WITH P4" to be also available publicly.
@@ -10,6 +11,8 @@ The code is mostly not original and you may find most of it in the following rep
 - https://github.com/GEANT-DataPlaneProgramming/int-platforms
 - https://github.com/mandaryoshi/p4-int. You may also check the Mandar Joshi's thesis "Implementation and evaluation of INT in P4" here https://www.diva-portal.org/smash/get/diva2:1609265/FULLTEXT01.pdf.
 - https://github.com/p4lang/p4pi/blob/master/packages/p4pi-examples/bmv2/arp_icmp/arp_icmp.p4
+You may also look into the official INT code available in the [p4 official repository for INT](https://github.com/p4lang/p4factory/tree/master/apps/int)
+
 
 ## INTRODUCTION
 SDN with P4 brings a new set of possibilities as the way the packets are processed is not defined by the vendor, but rather by the P4 program. Using this language, developers can define data plane behavior, specifying how switches shall process the packets. P4 lets developers define which headers a switch shall parse, how tables match on each header, and which actions the switch shall perform on each header. This new programmability extends the capabilities of the data plane into security features, such as stateful packet inspection and filtering, thus relieving the control plane. This offloading of security is enhanced by the ability to run at line speed as P4 runs on the programmed devices.
@@ -29,6 +32,8 @@ This scenario can thus be split in the following parts:
 2. demonstrate the collection of INT statistics;
 3. rogue host attacks;
 4. detection and protection against a rogue host.
+
+This network is simulated in mininet. Search here for more information in the [Mininet waltk trhough](http://mininet.org/walkthrough/)
 
 ## SIMULATE INT PLATFORM
 This platform must create INT statistics and send those to the collector. In this scenario, if the data sent by h1 matches the watch list, then there will be some INT statistics generated and sent to h4.
@@ -51,8 +56,29 @@ These MATs are already done:
 * [table for s3](tables/s3-commands.txt)
 * [table for s4](tables/s4-commands.txt)
 * [table for s5](tables/s5-commands.txt)
-
-## 
+### INT source
+The INT source switch must identify the flows via its watchlist. When there is a match, the switch adds the INT header and its INT data accordingly. In this lab, the source switches are s1 and s5. The code below is the configuration of switch s1, which defines the switch ID, the INT domain and the matchlist.
+```
+//set up ipv4_lpm table
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.1.1/32 => 00:00:0a:00:01:01 1
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.3.2/32 => 00:00:0a:00:03:02 2
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 3
+//set up switch ID
+table_set_default process_int_transit.tb_int_insert init_metadata 1
+//set up process_int_source_sink
+table_add process_int_source_sink.tb_set_source int_set_source 1 =>
+//matchlist h1 to h2, PostGreSQL 5432 Hex1538
+table_add process_int_source.tb_int_source int_source \
+10.0.1.1&&&0xFFFFFFFF 10.0.3.2&&&0xFFFFFFFF 0x00&&&0x00 0x1538&&&0xFFFF\
+=> 11 10 0xF 0xF 10
+```
+The last line includes:
+• source-ip, source-port, destination-ip, destination-port defines 4-tuple flow which will be monitored using INT functionality;
+• int-max-hops - how many INT nodes can add their INT node metadata to packets of this flow;
+• int-hop-metadata-len - INT metadata words are added by a single INT node;
+• int-hop-instruction-cnt - how many INT headers must be added by a single INT node;
+• int-instruction-bitmap - instruction mask defining which information (INT headers types) must added to the packet;
+• table-entry-priority - general priority of entry in match table (not related to INT)
 
 ## HOW TO USE
 
