@@ -37,11 +37,48 @@ In this scenario,the INT flow can be described in the following steps:
 You may disregard everything above and quickly start this mininet environment.
 ### Requirements
 Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
+sudo apt install bridge-utils
 **Install Influxdb:**
-1. dsds
-2. 
+1. Install influxdb with https://docs.influxdata.com/influxdb/v1.8/introduction/install/
+2. create the int databases
+'''
+~$ influx
+Connected to http://localhost:8086 version 1.8.10
+InfluxDB shell version: 1.8.10
+> show databases
+name: databases
+name
+----
+_internal
+> create database int with duration 24h
+> use int
+Using database int
+> show measurements
+'''
+note: after having successfully generated INT stats and uploaded to the int database, you may check with:
+'''
+~$ influx
+Connected to http://localhost:8086 version 1.8.10
+InfluxDB shell version: 1.8.10
+> use int
+> show measurements
+name: measurements
+name
+----
+flow_latency
+link_latency
+queue_occupancy
+switch_latency
+> select * from flow_latency
+name: flow_latency
+time                dst_ip   dst_port protocol src_ip   src_port value
+----                ------   -------- -------- ------   -------- -----
+1683387986735098368 10.0.3.2 80       17       10.0.1.1 57347    3666
+'''
+4. ...
+5. ...
 **Install Graphana**
-1. dsds
+1. Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
 2. 
 ### Steps
 1. clone this repository to your machine or VM
