@@ -169,9 +169,9 @@ collected information across the switches and appends to the database measuremen
 • Queue latency: switch ID, queue ID, occupancy of the flow, and the time when it was collected.
 
 The script also outputs to the screen as shown in Figure:
-[INT packed decoded by the collector script](pictures/int_packet_decoded.png)
+![INT packed decoded by the collector script](pictures/int_packet_decoded.png)
 These measurements are appended to a Influx database running on the host machine. We can see the measurements as in Figure:
-[InfluxDB client, displaying INT measurements](pictures/influxdb_CLI.png)
+![InfluxDB client, displaying INT measurements](pictures/influxdb_CLI.png)
 
 #### Wireshark INT P4 dissector
 The INT packets can be also analyzed in Wireshark, but it is helpful to have an appropriate decoder for this special packets. This decoder is called a dissector which needs to be built specifically for each implementation.
