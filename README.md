@@ -10,7 +10,7 @@ The code is mostly not original and you may find most of it in the following rep
 - https://github.com/lifengfan13/P4-INT
 - https://github.com/GEANT-DataPlaneProgramming/int-platforms
 - https://github.com/mandaryoshi/p4-int. You may also check the Mandar Joshi's thesis "Implementation and evaluation of INT in P4" here https://www.diva-portal.org/smash/get/diva2:1609265/FULLTEXT01.pdf.
-- https://github.com/p4lang/p4pi/blob/master/packages/p4pi-examples/bmv2/arp_icmp/arp_icmp.p4
+- [P4PI ARP](https://github.com/p4lang/p4pi/blob/master/packages/p4pi-examples/bmv2/arp_icmp/arp_icmp.p4)
 
 You may also look into the official INT code available in the [p4 official repository for INT](https://github.com/p4lang/p4factory/tree/master/apps/int)
 
@@ -84,12 +84,14 @@ table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 3
 table_set_default process_int_transit.tb_int_insert init_metadata 1
 //set up process_int_source_sink
 table_add process_int_source_sink.tb_set_source int_set_source 1 =>
-//matchlist h1 to h2, PostGreSQL 5432 Hex1538
-table_add process_int_source.tb_int_source int_source \
-10.0.1.1&&&0xFFFFFFFF 10.0.3.2&&&0xFFFFFFFF 0x00&&&0x00 0x1538&&&0xFFFF\
-=> 11 10 0xF 0xF 10
+//port PostGreSQL 5432
+table_add process_int_source.tb_int_source int_source 10.0.1.1&&&0xFFFFFFFF 10.0.3.2&&&0xFFFFFFFF 0x00&&&0x00 0x1538&&&0xFFFF => 11 10 0xF 0xF 10
+//port HTTPS 443
+table_add process_int_source.tb_int_source int_source 10.0.1.1&&&0xFFFFFFFF 10.0.3.2&&&0xFFFFFFFF 0x00&&&0x00 0x01BB&&&0xFFFF => 11 10 0xF 0xF 10
+//port HTTP 80
+table_add process_int_source.tb_int_source int_source 10.0.1.1&&&0xFFFFFFFF 10.0.3.2&&&0xFFFFFFFF 0x00&&&0x00 0x0050&&&0xFFFF => 11 10 0xF 0xF 10
 ```
-The last line includes:
+The last three lines refers to the :
 • source-ip, source-port, destination-ip, destination-port defines 4-tuple flow which will be monitored using INT functionality;
 • int-max-hops - how many INT nodes can add their INT node metadata to packets of this flow;
 • int-hop-metadata-len - INT metadata words are added by a single INT node;
@@ -98,6 +100,40 @@ The last line includes:
 • table-entry-priority - general priority of entry in match table (not related to INT)
 
 More information about [https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md](https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md#adding-4-tuple-flow-to-the-int-watchlist).
+
+### INT transit
+The int transit switch identifies that there is a INT packet embedded in the packet, so reads the instructions encoded in the INT header and adds its own INT data. Then forwards as specified by the lpm MAT. In this lab, the transit switches are s2 and s4. The code below is the configuration of switch s2, which specifies the lpm and the the switch ID.
+```
+//set up ipv4_lpm table
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.1.1/32 => 00:00:0a:00:01:01 1
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.3.2/32 => 00:00:0a:00:03:02 2
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 3
+//set up switch ID
+table_set_default process_int_transit.tb_int_insert init_metadata 2
+```
+
+### INT sink
+The INT sink switch detects the INT header in the packets and reads the instructions. Then adds its own INT data and creates a new packet as defined in the table below, towards the INT collector. This new packet is mirrored to the port where the INT collector is. Then extracts the INT data and restores the packet as originally sent towards the destination host. The code below is the configuration of the switch s3 which includes the following:
+• mirrored port for the INT collector;
+• lpm MAT;
+• INT domain;
+• source and destination, L2 addresses and L3 addresses, and L4 port;
+• switch ID.
+```
+//creates a mirroring ID to output port specified
+mirroring_add 500 2
+//set up ipv4_lpm table
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.1.1/32 => 00:00:0a:00:01:01 4
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.3.2/32 => 00:00:0a:00:03:02 1
+table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 6
+//set up process_int_source_sink
+table_add process_int_source_sink.tb_set_sink int_set_sink 1 =>
+//INT report setup towards the INT collector
+table_add process_int_report.tb_generate_report do_report_encapsulation =>\
+00:01:0a:00:03:07 00:00:0a:00:03:04 10.0.3.254 10.0.3.4 1234
+//set up switch ID
+table_set_default process_int_transit.tb_int_insert init_metadata 3
+```
 
 
 ### Attacks
@@ -122,8 +158,8 @@ https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
 ## HOW TO USE
 
 
-### QUICK SETUP
-You may disregard everything above and quickly start this mininet environment.
+### FAST PLAY
+You may disregard everything above and quickly start this mininet environment!
 #### Pre-requisites
 Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
 sudo apt install bridge-utils
