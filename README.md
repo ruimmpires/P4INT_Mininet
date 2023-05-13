@@ -171,15 +171,15 @@ collected information across the switches and appends to the database measuremen
 The script also outputs to the screen as shown in Figure:
 [INT packed decoded by the collector script](pictures/int_packet_decoded.png)
 These measurements are appended to a Influx database running on the host machine. We can see the measurements as in Figure:
-
+[InfluxDB client, displaying INT measurements](pictures/influxdb_CLI.png)
 
 #### Wireshark INT P4 dissector
 The INT packets can be also analyzed in Wireshark, but it is helpful to have an appropriate decoder for this special packets. This decoder is called a dissector which needs to be built specifically for each implementation.
-
+- [ ] **ONGOING**
 As a first approach, we used an incomplete decoder as described in the following capture:
 ![capture of an INT P4 Wireshark dissector](/pictures/int_packet_udp_1234_wireshark_dissector.png)
 
-- [ ] **ONGOING**
+
 Some ideas:
 * [P4_Wireshark_Dissector](https://github.com/gnikol/P4-Wireshark-Dissector)
 * [P4_INT_Wireshark_Dissector](https://github.com/MehmedGIT/P4_INT_Wireshark_Dissector/blob/master/int_telemetry-report.lua)
