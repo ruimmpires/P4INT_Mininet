@@ -179,7 +179,7 @@ The INT packets can be also analyzed in Wireshark, but it is helpful to have an 
 As a first approach, we used an incomplete decoder as described in the following capture:
 ![capture of an INT P4 Wireshark dissector](/pictures/int_packet_udp_1234_wireshark_dissector.png)
 
--[ ] **ONGOING**
+- [ ] **ONGOING**
 Some ideas:
 * [P4_Wireshark_Dissector](https://github.com/gnikol/P4-Wireshark-Dissector)
 * [P4_INT_Wireshark_Dissector](https://github.com/MehmedGIT/P4_INT_Wireshark_Dissector/blob/master/int_telemetry-report.lua)
