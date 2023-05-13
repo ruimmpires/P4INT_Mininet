@@ -48,9 +48,10 @@ This scenario can thus be split in the following parts:
 
 This network is simulated in mininet. Search here for more information in the [Mininet waltkthrough](http://mininet.org/walkthrough/)
 
-## SIMULATE INT PLATFORM
+## SIMULATE AN INT PLATFORM
 This platform must create INT statistics and send those to the collector. In this scenario, if the data sent by h1 matches the watch list, then there will be some INT statistics generated and sent to h4.
 As part of the scenario, the h2 server is simulating 3 services: PostgreSQL, HTTPS and HTTP. So, the switches s1 and s5 are pre-configured as INT source and also pre-configured the match list for source and destination IPs and l4 ports: 5432 for PostgreSQL, 443 for HTTPS and 80 for HTTP.
+
 ### Packet source
 NT packets are only generated if a specific packet matches the watchlist. So, we used the scapy library within a python script to craft the packets. This is a simple script that takes as input parameters the destination IP, the l4 protocol UDP/TCP, the destination port number, an optional message and the number of packets sent. Additionally, we included a command to simulate recurrent accesses to the server, e.g., every 5 seconds access to HTTPS, from the h1 and h3 hosts’ CLI:
 ```watch -n 5 python3 send.py --ip 10.0.3.2 -l4 udp --port 443 --m INTH1 --c 1```
@@ -73,6 +74,7 @@ These MATs are already done:
 * [table for s3](tables/s3-commands.txt)
 * [table for s4](tables/s4-commands.txt)
 * [table for s5](tables/s5-commands.txt)
+
 ### INT source
 The INT source switch must identify the flows via its watchlist. When there is a match, the switch adds the INT header and its INT data accordingly. In this lab, the source switches are s1 and s5. The code below is the configuration of switch s1, which defines the switch ID, the INT domain and the watchlist.
 ```
@@ -135,6 +137,22 @@ table_add process_int_report.tb_generate_report do_report_encapsulation =>\
 table_set_default process_int_transit.tb_int_insert init_metadata 3
 ```
 
+## COLLECTION OF INT STATISTICS AND VISUALIZATION
+There are some good examples of the visualization of INT statistics all based on InfluxDB for the database and Grafana for the visualization:
+* [GEANT In-band Network Telemetry using Data Plane Programming](https://events.geant.org/event/1104/contributions/1063/attachments/682/953/202204062-2ndTelemetry-Data-Campanella-v1.pdf)
+* [Implementation and Evaluation of InBandNetwork Telemetry in P4](https://www.diva-portal.org/smash/get/diva2:1609265/FULLTEXT01.pdf)
+* [INTCollector: A High-performance Collector for In-band Network Telemetry](https://dl.ifip.org/db/conf/cnsm/cnsm2018/1570470751.pdf)
+
+### INT Collection
+The collection of the INT data is achieved with a script that listens to the data incoming to h4 and filters the packets with the predefined expected INT. In this case these packets were predefined as UDP/1234 in the switch 3.
+```
+00:01:0a:00:03:05 (oui Unknown) > 00:00:0a:00:03:04 (oui Unknown), ethertype IPv4 (0x0800), length 252: 10.0.3.254.1234 > 10.0.3.4.1234: UDP, length 210
+```
+
+#### Wireshark INT P4 dissector
+The INT packets can be also analyzed in Wireshark, but it is helpful to have an appropriate decoder for this special packets. This decoder is called a dissector which needs to be built specifically for each implementation.
+
+As a first approach, we used an incomplete decoder as described in the ![capture of an INT P4 Wireshark dissector](/pictures/ int_packet_udp_1234_wireshark_dissector.png)
 
 ### Attacks
 
