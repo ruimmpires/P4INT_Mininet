@@ -152,7 +152,7 @@ The collection of the INT data is achieved with a script that listens to the dat
 #### Wireshark INT P4 dissector
 The INT packets can be also analyzed in Wireshark, but it is helpful to have an appropriate decoder for this special packets. This decoder is called a dissector which needs to be built specifically for each implementation.
 
-As a first approach, we used an incomplete decoder as described in the ![capture of an INT P4 Wireshark dissector](/pictures/ int_packet_udp_1234_wireshark_dissector.png)
+As a first approach, we used an incomplete decoder as described in the ![capture of an INT P4 Wireshark dissector](pictures/ int_packet_udp_1234_wireshark_dissector.png)
 
 ### Attacks
 
