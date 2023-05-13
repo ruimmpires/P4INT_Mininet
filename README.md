@@ -137,6 +137,19 @@ table_add process_int_report.tb_generate_report do_report_encapsulation =>\
 table_set_default process_int_transit.tb_int_insert init_metadata 3
 ```
 
+### Server listening
+Finally, the simulated server in h2 is preferably listening to the sent data from h1 and h3, so we used netcat to listen to the pre-determined services:
+```
+while true; do nc -ul -p 80; done &
+echo listening on port on port 80
+while true; do nc -ul -p 443; done &
+echo listening on port on port 443
+while true; do nc -ul -p 5432; done &
+echo listening on port on port 5432
+```
+
+You can find this ready-made script for [h2 listening](receive/h2.sh).
+
 ## COLLECTION OF INT STATISTICS AND VISUALIZATION
 There are some good examples of the visualization of INT statistics all based on InfluxDB for the database and Grafana for the visualization:
 * [GEANT In-band Network Telemetry using Data Plane Programming](https://events.geant.org/event/1104/contributions/1063/attachments/682/953/202204062-2ndTelemetry-Data-Campanella-v1.pdf)
@@ -148,12 +161,28 @@ The collection of the INT data is achieved with a script that listens to the dat
 ```
 00:01:0a:00:03:05 (oui Unknown) > 00:00:0a:00:03:04 (oui Unknown), ethertype IPv4 (0x0800), length 252: 10.0.3.254.1234 > 10.0.3.4.1234: UDP, length 210
 ```
+We used a python script to [listen and collect INT](receive/collector_influxdb.py) that parses through the INT packet and extracts the
+collected information across the switches and appends to the database measurements:
+• Flow latency: source IP, destination IP, source port, destination port, protocol, and the time when it was collected.
+• Switch latency: switch ID, latency in its hop , and the time when it was collected.
+• Link latency: egress switch ID, egress port ID, ingress switch ID, ingress portID, latency, and the time when it was collected. The latency is calculated as the difference between the time of the egress and the time of ingress on each switch.
+• Queue latency: switch ID, queue ID, occupancy of the flow, and the time when it was collected.
+
+The script also outputs to the screen as shown in Figure:
+[INT packed decoded by the collector script](pictures/int_packet_decoded.png)
+These measurements are appended to a Influx database running on the host machine. We can see the measurements as in Figure:
+
 
 #### Wireshark INT P4 dissector
 The INT packets can be also analyzed in Wireshark, but it is helpful to have an appropriate decoder for this special packets. This decoder is called a dissector which needs to be built specifically for each implementation.
 
-As a first approach, we used an incomplete decoder as described in the ![capture of an INT P4 Wireshark dissector](/pictures/ int_packet_udp_1234_wireshark_dissector.png)
-![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
+As a first approach, we used an incomplete decoder as described in the following capture:
+![capture of an INT P4 Wireshark dissector](/pictures/int_packet_udp_1234_wireshark_dissector.png)
+
+-[] **ONGOING**
+Some ideas:
+[P4_Wireshark_Dissector](https://github.com/gnikol/P4-Wireshark-Dissector)
+[P4_INT_Wireshark_Dissector](https://github.com/MehmedGIT/P4_INT_Wireshark_Dissector/blob/master/int_telemetry-report.lua)
 
 ### Attacks
 
