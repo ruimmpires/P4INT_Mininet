@@ -200,7 +200,7 @@ mininet> iperf h3 h2
 You may test the effects of sending data like the above h3>h2 and check the stats such as high latency:
 ![capture in graphana while flooding the server from s3 - link latency](/pictures/graphana_effect_load_link_latency.png)
 ![capture in graphana while flooding the server from s3 - switch latency](/pictures/graphana_effect_load_switch_latency.png)
-![capture in graphana while flooding the server from s3 - flow latency](/pictures/graphana_effect_load_flow_atency.png)
+![capture in graphana while flooding the server from s3 - flow latency](/pictures/graphana_effect_load_flow_latency.png)
 In this case, at h2 we typed ```iperf -s``` and at h3 ```iperf -c 10.0.3.2 -n 100M```
 
 ### Attacks
