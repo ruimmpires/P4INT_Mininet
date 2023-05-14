@@ -150,13 +150,13 @@ echo listening on port on port 5432
 
 You can find this ready-made script for [h2 listening](receive/h2.sh).
 
-## COLLECTION OF INT STATISTICS AND VISUALIZATION
+## COLLECTION OF INT STATISTICS
 There are some good examples of the visualization of INT statistics all based on InfluxDB for the database and Grafana for the visualization:
 * [GEANT In-band Network Telemetry using Data Plane Programming](https://events.geant.org/event/1104/contributions/1063/attachments/682/953/202204062-2ndTelemetry-Data-Campanella-v1.pdf)
 * [Implementation and Evaluation of InBandNetwork Telemetry in P4](https://www.diva-portal.org/smash/get/diva2:1609265/FULLTEXT01.pdf)
 * [INTCollector: A High-performance Collector for In-band Network Telemetry](https://dl.ifip.org/db/conf/cnsm/cnsm2018/1570470751.pdf)
 
-### INT Collection
+### The collector
 The collection of the INT data is achieved with a script that listens to the data incoming to h4 and filters the packets with the predefined expected INT. In this case these packets were predefined as UDP/1234 in the switch 3.
 ```
 00:01:0a:00:03:05 (oui Unknown) > 00:00:0a:00:03:04 (oui Unknown), ethertype IPv4 (0x0800), length 252: 10.0.3.254.1234 > 10.0.3.4.1234: UDP, length 210
@@ -184,6 +184,18 @@ As a first approach, we used an incomplete decoder as described in the following
 Some ideas:
 * [P4_Wireshark_Dissector](https://github.com/gnikol/P4-Wireshark-Dissector)
 * [P4_INT_Wireshark_Dissector](https://github.com/MehmedGIT/P4_INT_Wireshark_Dissector/blob/master/int_telemetry-report.lua)
+
+
+
+## VISUALIZATION
+The visualization of the INT packets in Grafana offers quick insights of the behavior of the network. We can for example, as captured in the Figure:
+• display the link latency of the flows from h1 or from h3;
+• display the flow mean flow latency;
+• display the same flow latency per service. In this case the HTTP, HTTPS or PostgreSQL;
+• display the same flow latency per source host. In this case h1->h2 or h3->h2;
+• display the switch latency overall and per switch;
+![Graphana example 1](/pictures/grafana_example1.png}
+
 
 ### Some tests
 Note: the network was pre-defined with slower speed for the packets coming from h3 with bandwith commands in the [network configuration](network.py). 
