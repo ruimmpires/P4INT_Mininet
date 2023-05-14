@@ -60,6 +60,9 @@ You can find ready-made scripts for h1 and h3 in [h1 to h2](send/h1.sh) and [h3 
 
 You may search for information about the scapy in the [The Art of Packet Crafting with Scapy](https://0xbharath.github.io/art-of-packet-crafting-with-scapy/scapy/sending_recieving/index.html)
 
+This packet is only carrying the content "INTH1" as captured at the exit of h1 interface in Wireshark, displayed in the Figure:
+![Wireshark capture of packet leaving h1](/pictures/wireshark_s1_eth1.png)
+
 ### Packet forwarding
 The L3 forwarding tables are pre-established in the switches with MAT using Longest Prefix Match (LPM). So the hosts h1, h2 and h3 are pre-registered in each switch’s MAT as e,g, for s2:
 ```
@@ -103,6 +106,10 @@ The last three lines refers to the :
 
 More information about [https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md](https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md#adding-4-tuple-flow-to-the-int-watchlist).
 
+The packet leaving s1 has now the s1 INT statistics, as captured at the exit of s1
+interface in Wireshark, displayed in the Figure:
+![Wireshark capture of packet leaving s1 towards s2](/pictures/wireshark_s1_eth2.png)
+
 ### INT transit
 The int transit switch identifies that there is a INT packet embedded in the packet, so reads the instructions encoded in the INT header and adds its own INT data. Then forwards as specified by the lpm MAT. In this lab, the transit switches are s2 and s4. The code below is the configuration of switch s2, which specifies the lpm and the the switch ID.
 ```
@@ -113,6 +120,9 @@ table_add l3_forward.ipv4_lpm ipv4_forward 10.0.5.3/32 => 00:00:0a:00:05:03 3
 //set up switch ID
 table_set_default process_int_transit.tb_int_insert init_metadata 2
 ```
+
+The packet leaving s2 has now the s1 + s2 INT statistics, as captured at the exit of s2 interface in Wireshark, displayed in the Figure:
+![Wireshark capture of packet leaving s2 towards s3](/pictures/wireshark_s2_eth2.png)
 
 ### INT sink
 The INT sink switch detects the INT header in the packets and reads the instructions. Then adds its own INT data and creates a new packet as defined in the table below, towards the INT collector. This new packet is mirrored to the port where the INT collector is. Then extracts the INT data and restores the packet as originally sent towards the destination host. The code below is the configuration of the switch s3 which includes the following:
@@ -136,6 +146,8 @@ table_add process_int_report.tb_generate_report do_report_encapsulation =>\
 //set up switch ID
 table_set_default process_int_transit.tb_int_insert init_metadata 3
 ```
+Now s3 adds its own statistics, so now we have a new package with s1 + s2 + s3 INT statistics, as captured at the exit of s3 interface towards h4 in Wireshark.
+![Wireshark capture of packet leaving s3 towards h4](/pictures/wireshark_s3_eth2.png)
 
 ### Server listening
 Finally, the simulated server in h2 is preferably listening to the sent data from h1 and h3, so we used netcat to listen to the pre-determined services:
@@ -149,6 +161,9 @@ echo listening on port on port 5432
 ```
 
 You can find this ready-made script for [h2 listening](receive/h2.sh).
+
+The packet leaving s3 to the server is stripped of the INT statistics, as captured at the exit of s3 interface towards h2 in Wireshark, displayed in the Figure below. This packet has the same data as the initial package but different L2 metadata.
+![Wireshark capture of packet leaving s3 towards h2](/pictures/wireshark_s3_eth1.png)
 
 ## COLLECTION OF INT STATISTICS
 There are some good examples of the visualization of INT statistics all based on InfluxDB for the database and Grafana for the visualization:
