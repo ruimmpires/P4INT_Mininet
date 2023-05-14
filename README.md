@@ -176,6 +176,7 @@ These measurements are appended to a Influx database running on the host machine
 #### Wireshark INT P4 dissector
 The INT packets can be also analyzed in Wireshark, but it is helpful to have an appropriate decoder for this special packets. This decoder is called a dissector which needs to be built specifically for each implementation.
 - [ ] **ONGOING**
+<!-- ******************* WORK  IN PROGRESS ****************** -->
 As a first approach, we used an incomplete decoder as described in the following capture:
 ![capture of an INT P4 Wireshark dissector](/pictures/int_packet_udp_1234_wireshark_dissector.png)
 
@@ -183,6 +184,24 @@ As a first approach, we used an incomplete decoder as described in the following
 Some ideas:
 * [P4_Wireshark_Dissector](https://github.com/gnikol/P4-Wireshark-Dissector)
 * [P4_INT_Wireshark_Dissector](https://github.com/MehmedGIT/P4_INT_Wireshark_Dissector/blob/master/int_telemetry-report.lua)
+
+### Some tests
+Note: the network was pre-defined with slower speed for the packets coming from h3 with bandwith commands in the [network configuration](network.py). 
+So, if you do basic iperf tests from the mininet window you will get similar data as:
+```
+mininet> iperf h1 h2
+*** Iperf: testing TCP bandwidth between h1 and h2
+*** Results: ['57.0 Mbits/sec', '61.9 Mbits/sec']
+mininet> iperf h3 h2
+*** Iperf: testing TCP bandwidth between h3 and h2
+*** Results: ['90.8 Kbits/sec', '545 Kbits/sec']
+```
+#### Effect of high load in INT stats
+You may test the effects of sending data like the above h3>h2 and check the stats such as high latency:
+![capture in graphana while flooding the server from s3 - link latency](/pictures/graphana_effect_load_link_latency.png)
+![capture in graphana while flooding the server from s3 - switch latency](/pictures/graphana_effect_load_switch_latency.png)
+![capture in graphana while flooding the server from s3 - flow latency](/pictures/graphana_effect_load_flow_atency.png)
+In this case, at h2 we typed ```iperf -s``` and from h3 ```iperf -c 10.0.3.2 -n 100M```
 
 ### Attacks
 
@@ -235,7 +254,7 @@ Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/inst
 ### Steps
 1. clone this repository to your machine or VM
 2. change directory to the new P4INT_Mininet folder
-3. type ```make run```
+3. type ```sudo make run```
 4. in the mininet CLI interface type mininet> ```xterm h1 h2 h3```
 5. in another terminal window, start the collector with ```sudo python3 receive/collector_influxdb.py``` 
 6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
