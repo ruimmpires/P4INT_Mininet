@@ -171,6 +171,26 @@ There are some good examples of the visualization of INT statistics all based on
 * [Implementation and Evaluation of InBandNetwork Telemetry in P4](https://www.diva-portal.org/smash/get/diva2:1609265/FULLTEXT01.pdf)
 * [INTCollector: A High-performance Collector for In-band Network Telemetry](https://dl.ifip.org/db/conf/cnsm/cnsm2018/1570470751.pdf)
 
+### Install Influxdb
+1. Install influxdb with https://docs.influxdata.com/influxdb/v1.8/introduction/install/
+2. create the int database
+```
+~$ influx
+Connected to http://localhost:8086 version 1.8.10
+InfluxDB shell version: 1.8.10
+> show databases
+name: databases
+name
+----
+_internal
+> create database int with duration 24h
+> use int
+Using database int
+> show measurements
+```
+No measurements are there yet. These will be created when the data is uploaded.
+#### Install Graphana
+
 ### The collector
 The collection of the INT data is achieved with a script that listens to the data incoming to h4 and filters the packets with the predefined expected INT. In this case these packets were predefined as UDP/1234 in the switch 3.
 ```
@@ -178,10 +198,10 @@ The collection of the INT data is achieved with a script that listens to the dat
 ```
 We used a python script to [listen and collect INT](receive/collector_influxdb.py) that parses through the INT packet and extracts the
 collected information across the switches and appends to the database measurements:
-• Flow latency: source IP, destination IP, source port, destination port, protocol, and the time when it was collected.
-• Switch latency: switch ID, latency in its hop , and the time when it was collected.
-• Link latency: egress switch ID, egress port ID, ingress switch ID, ingress portID, latency, and the time when it was collected. The latency is calculated as the difference between the time of the egress and the time of ingress on each switch.
-• Queue latency: switch ID, queue ID, occupancy of the flow, and the time when it was collected.
+* Flow latency: source IP, destination IP, source port, destination port, protocol, and the time when it was collected.
+* Switch latency: switch ID, latency in its hop , and the time when it was collected.
+* Link latency: egress switch ID, egress port ID, ingress switch ID, ingress portID, latency, and the time when it was collected. The latency is calculated as the difference between the time of the egress and the time of ingress on each switch.
+* Queue latency: switch ID, queue ID, occupancy of the flow, and the time when it was collected.
 
 The script also outputs to the screen as shown in Figure:
 ![INT packed decoded by the collector script](pictures/int_packet_decoded.png)
@@ -249,7 +269,11 @@ Etttercap is probably the best tool to do such attacks, so we needed to be acqua
 * https://github.com/Ettercap/ettercap/wiki/Providing-debug-information
 * https://github.com/Ettercap/ettercap/issues/1121
 
+So, we started with the command in h5:
+```
+ettercap -Ti h5-eth0 -M arp:oneway //10.0.3.254/ //10.0.3.4/
 
+```
 
 #### Replay attack
 https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
