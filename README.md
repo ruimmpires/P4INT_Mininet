@@ -185,6 +185,7 @@ collected information across the switches and appends to the database measuremen
 
 The script also outputs to the screen as shown in Figure:
 ![INT packed decoded by the collector script](pictures/int_packet_decoded.png)
+
 These measurements are appended to a Influx database running on the host machine. We can see the measurements as in Figure:
 ![InfluxDB client, displaying INT measurements](pictures/influxdb_CLI.png)
 
@@ -231,9 +232,18 @@ You may test the effects of sending data like the above h3>h2 and check the stat
 
 In this case, at h2 we typed ```iperf -s``` and at h3 ```iperf -c 10.0.3.2 -n 100M```
 
-### Attacks
+## ATTACKS
+The INT statistics can be an important security asset as the data may be used by the network admins for assessing the network and troubleshooting any issues. So, it is a possible target for an malicious adversary.
 
-#### MITM attack
+We consider in this scenario that an adversary is controlling a rogue host. There
+are several possible attacks that we we will try such as:
+• INT eavesdropping;
+• INT replay;
+• INT manipulation;
+
+### INT eavesdropping
+
+### MITM attack
 Etttercap is probably the best tool to do such attacks, so we needed to be acquainted with these sources:
 * https://linux.die.net/man/8/ettercap
 * https://github.com/Ettercap/ettercap/wiki/Providing-debug-information
