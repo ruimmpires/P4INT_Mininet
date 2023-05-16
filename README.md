@@ -189,7 +189,6 @@ Using database int
 > show measurements
 ```
 No measurements are there yet. These will be created when the data is uploaded.
-#### Install Graphana
 
 ### The collector
 The collection of the INT data is achieved with a script that listens to the data incoming to h4 and filters the packets with the predefined expected INT. In this case these packets were predefined as UDP/1234 in the switch 3.
@@ -216,7 +215,6 @@ The INT packets can be also analyzed in Wireshark, but it is helpful to have an 
 As a first approach, we used an incomplete decoder as described in the following capture:
 ![capture of an INT P4 Wireshark dissector](/pictures/int_packet_udp_1234_wireshark_dissector.png)
 
-
 Some ideas:
 * [P4_Wireshark_Dissector](https://github.com/gnikol/P4-Wireshark-Dissector)
 * [P4_INT_Wireshark_Dissector](https://github.com/MehmedGIT/P4_INT_Wireshark_Dissector/blob/master/int_telemetry-report.lua)
@@ -225,14 +223,22 @@ Some ideas:
 
 ## VISUALIZATION
 The visualization of the INT packets in Grafana offers quick insights of the behavior of the network. We can for example, as captured in the Figure:
-• display the link latency of the flows from h1 or from h3;
-• display the flow mean flow latency;
-• display the same flow latency per service. In this case the HTTP, HTTPS or PostgreSQL;
-• display the same flow latency per source host. In this case h1->h2 or h3->h2;
-• display the switch latency overall and per switch;
-![Graphana example 1](/pictures/grafana_example1.png}
-
-
+* display the link latency of the flows from h1 or from h3;
+* display the flow mean flow latency;
+* display the same flow latency per service. In this case the HTTP, HTTPS or PostgreSQL;
+* display the same flow latency per source host. In this case h1->h2 or h3->h2;
+* display the switch latency overall and per switch;
+![Grafana example 1](/pictures/grafana_example1.png)
+### Install Graphana
+Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
+### Add the InfluxDB datasource
+1.  In the Grafana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
+2.  Select the database int
+3.  Test and all is ok, you will see the message ![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
+### Import the dashboard
+This is optional, as you can build your own dashboard
+Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](/grafana/INT statistics.json)
+![Import the dashboard](/pictures/grafana_import_dashboard.png).
 ### Some tests
 Note: the network was pre-defined with slower speed for the packets coming from h3 with bandwith commands in the [network configuration](network.py). 
 So, if you do basic iperf tests from the mininet window you will get similar data as:
@@ -261,19 +267,36 @@ are several possible attacks that we we will try such as:
 • INT replay;
 • INT manipulation;
 
-### INT eavesdropping
-
-### MITM attack
 Etttercap is probably the best tool to do such attacks, so we needed to be acquainted with these sources:
 * https://linux.die.net/man/8/ettercap
 * https://github.com/Ettercap/ettercap/wiki/Providing-debug-information
 * https://github.com/Ettercap/ettercap/issues/1121
 
-So, we started with the command in h5:
+### INT eavesdropping
+In this scenario, the adversary will try to listen to the traffic using tools like ettercap. We used ettercap to do the ARP poisoning and thus mislead both the switch as well as the host to send the data to the rogue host. This is simple MITM attack, that starts with eavesdropping:
 ```
 ettercap -Ti h5-eth0 -M arp:oneway //10.0.3.254/ //10.0.3.4/
-
 ```
+- [ ] **ONGOING**
+<!-- ******************* WORK  IN PROGRESS ****************** -->
+
+As in this current P4 code the ARP is static, the s3 and h4 ARP tables can’t be poisoned. In the Figure 4.15 we illustrate the initial h4 ARP table and that after each poisoning message from h5, s3 replies with a gratuitous ARP message:
+![Failed ARP poisoning attempt](/picures/ettercap_attack_mininet_h4_initial_arp.png)
+Note: if s3 does not reply to ARP, e.g. if the tables are empty, then ettercap fails with the message:
+```
+FATAL: ARP poisoning needs a non empty hosts list.
+```
+
+### MITM attack
+An attacker could easily do a replay attack by sending fake data towards the INT collector:
+* collect a previous INT message or craft INT stats;
+* send toward the collector;
+* spoof the IP source as the s3 gateway;
+In this case we have used a previously captured INT message and included into a small python script as the payload. We used python script .
+
+
+
+
 
 #### Replay attack
 https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
@@ -284,15 +307,12 @@ https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
 
 
 
-## HOW TO USE
-
-
-### FAST PLAY
+## FAST PLAY
 You may disregard everything above and quickly start this mininet environment!
-#### Pre-requisites
+### Pre-requisites
 Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
 sudo apt install bridge-utils
-#### Install Influxdb
+### Install Influxdb
 1. Install influxdb with https://docs.influxdata.com/influxdb/v1.8/introduction/install/
 2. create the int database
 ```
@@ -310,10 +330,7 @@ Using database int
 > show measurements
 ```
 No measurements are there yet. These will be created when the data is uploaded.
-#### Install Graphana
-Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
-
-### Steps
+### MININET
 1. clone this repository to your machine or VM
 2. change directory to the new P4INT_Mininet folder
 3. type ```sudo make run```
@@ -322,7 +339,6 @@ Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/inst
 6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
 7. in the h1 type ```./send/h1.sh```  which sends traffic from h1 and creates INT statistics
 8. in the h3 type ```./send/h3.sh```  which sends traffic from h3 and creates INT statistics
-
 #### Check InfluxDB
 After having successfully generated INT stats and uploaded to the int database, you may check with:
 ```
@@ -345,24 +361,16 @@ time                dst_ip   dst_port protocol src_ip   src_port value
 1683387986735098368 10.0.3.2 80       17       10.0.1.1 57347    3666
 ```
 You may also check the logs with ```sudo journalctl -u influxdb.service | grep “POST /write”```
-
+#### Install Graphana
+Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
 #### Add the InfluxDB datasource
-1.  In the Graphana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
+1.  In the Grafana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
 2.  Select the database int
 3.  Test and all is ok, you will see the message ![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
+#### Import the dashboard
+This is optional, as you can build your own dashboard
+Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](/grafana/INT statistics.json)
+![Import the dashboard](/pictures/grafana_import_dashboard.png).
 
-
-
-
-### 
-
-
-
-### Requirements
-
-### Collection of reports
-
-### Visualization
-If you have access to the FCTUC/DEI VPN or are locally connected, you may see the stas here http://10.254.0.171:3000/d/V8Ss1QY4k/int-statistics?orgId=1&refresh=1m&from=now-15m&to=now with the credentials readonly/readonly.
-
-## Testing
+## My lab
+If you have access to the FCTUC/DEI VPN or are locally connected, you may see the stats here http://10.254.0.171:3000/d/V8Ss1QY4k/int-statistics?orgId=1&refresh=1m&from=now-15m&to=now with the credentials readonly/readonly.
