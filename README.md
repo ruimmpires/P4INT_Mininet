@@ -54,11 +54,12 @@ As part of the scenario, the h2 server is simulating 3 services: PostgreSQL, HTT
 
 ### Packet source
 NT packets are only generated if a specific packet matches the watchlist. So, we used the scapy library within a python script to craft the packets. This is a simple script that takes as input parameters the destination IP, the l4 protocol UDP/TCP, the destination port number, an optional message and the number of packets sent. Additionally, we included a command to simulate recurrent accesses to the server, e.g., every 5 seconds access to HTTPS, from the h1 and h3 hosts’ CLI:
-```watch -n 5 python3 send.py --ip 10.0.3.2 -l4 udp --port 443 --m INTH1 --c 1```
-
+```
+watch -n 5 python3 send.py --ip 10.0.3.2 -l4 udp --port 443 --m INTH1 --c 1
+```
 You can find ready-made scripts for h1 and h3 in [h1 to h2](send/h1.sh) and [h3 to h4](send/h1.sh)
 
-You may search for information about the scapy in the [The Art of Packet Crafting with Scapy](https://0xbharath.github.io/art-of-packet-crafting-with-scapy/scapy/sending_recieving/index.html)
+You may search for information about the scapy in [The Art of Packet Crafting with Scapy](https://0xbharath.github.io/art-of-packet-crafting-with-scapy/scapy/sending_recieving/index.html)
 
 This packet is only carrying the content "INTH1" as captured at the exit of h1 interface in Wireshark, displayed in the Figure:
 ![Wireshark capture of packet leaving h1](/pictures/wireshark_s1_eth1.png)
@@ -97,17 +98,17 @@ table_add process_int_source.tb_int_source int_source 10.0.1.1&&&0xFFFFFFFF 10.0
 table_add process_int_source.tb_int_source int_source 10.0.1.1&&&0xFFFFFFFF 10.0.3.2&&&0xFFFFFFFF 0x00&&&0x00 0x0050&&&0xFFFF => 11 10 0xF 0xF 10
 ```
 The last three lines refers to the :
-• source-ip, source-port, destination-ip, destination-port defines 4-tuple flow which will be monitored using INT functionality;
-• int-max-hops - how many INT nodes can add their INT node metadata to packets of this flow;
-• int-hop-metadata-len - INT metadata words are added by a single INT node;
-• int-hop-instruction-cnt - how many INT headers must be added by a single INT node;
-• int-instruction-bitmap - instruction mask defining which information (INT headers types) must added to the packet;
-• table-entry-priority - general priority of entry in match table (not related to INT)
+* source-ip, source-port, destination-ip, destination-port defines 4-tuple flow which will be monitored using INT functionality;
+* int-max-hops - how many INT nodes can add their INT node metadata to packets of this flow;
+* int-hop-metadata-len - INT metadata words are added by a single INT node;
+* int-hop-instruction-cnt - how many INT headers must be added by a single INT node;
+* int-instruction-bitmap - instruction mask defining which information (INT headers types) must added to the packet;
+* table-entry-priority - general priority of entry in match table (not related to INT)
 
-More information about [https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md](https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md#adding-4-tuple-flow-to-the-int-watchlist).
+More information about this at  [https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md](https://github.com/GEANT-DataPlaneProgramming/int-platforms/blob/master/docs/configuration.md#adding-4-tuple-flow-to-the-int-watchlist).
 
-The packet leaving s1 has now the s1 INT statistics, as captured at the exit of s1
-interface in Wireshark, displayed in the Figure:
+The packet leaving s1 has now the s1 INT statistics, as captured at the exit of s1 interface in Wireshark, displayed in the Figure:
+
 ![Wireshark capture of packet leaving s1 towards s2](/pictures/wireshark_s1_eth2.png)
 
 ### INT transit
@@ -126,11 +127,11 @@ The packet leaving s2 has now the s1 + s2 INT statistics, as captured at the exi
 
 ### INT sink
 The INT sink switch detects the INT header in the packets and reads the instructions. Then adds its own INT data and creates a new packet as defined in the table below, towards the INT collector. This new packet is mirrored to the port where the INT collector is. Then extracts the INT data and restores the packet as originally sent towards the destination host. The code below is the configuration of the switch s3 which includes the following:
-• mirrored port for the INT collector;
-• lpm MAT;
-• INT domain;
-• source and destination, L2 addresses and L3 addresses, and L4 port;
-• switch ID.
+* mirrored port for the INT collector;
+* lpm MAT;
+* INT domain;
+* source and destination, L2 addresses and L3 addresses, and L4 port;
+* switch ID.
 ```
 //creates a mirroring ID to output port specified
 mirroring_add 500 2
@@ -163,6 +164,7 @@ echo listening on port on port 5432
 You can find this ready-made script for [h2 listening](receive/h2.sh).
 
 The packet leaving s3 to the server is stripped of the INT statistics, as captured at the exit of s3 interface towards h2 in Wireshark, displayed in the Figure below. This packet has the same data as the initial package but different L2 metadata.
+
 ![Wireshark capture of packet leaving s3 towards h2](/pictures/wireshark_s3_eth1.png)
 
 ## COLLECTION OF INT STATISTICS
@@ -203,9 +205,11 @@ collected information across the switches and appends to the database measuremen
 * Queue latency: switch ID, queue ID, occupancy of the flow, and the time when it was collected.
 
 The script also outputs to the screen as shown in Figure:
+
 ![INT packed decoded by the collector script](pictures/int_packet_decoded.png)
 
 These measurements are appended to a Influx database running on the host machine. We can see the measurements as in Figure:
+
 ![InfluxDB client, displaying INT measurements](pictures/influxdb_CLI.png)
 
 #### Wireshark INT P4 dissector
@@ -236,8 +240,10 @@ Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/inst
 2.  Select the database int
 3.  Test and all is ok, you will see the message ![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
 ### Import the dashboard
-This is optional, as you can build your own dashboard
-Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](/grafana/INT statistics.json)
+This is optional, as you can build your own dashboard.
+
+Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](grafana/INT statistics.json)
+
 ![Import the dashboard](/pictures/grafana_import_dashboard.png).
 ### Some tests
 Note: the network was pre-defined with slower speed for the packets coming from h3 with bandwith commands in the [network configuration](network.py). 
@@ -263,9 +269,9 @@ The INT statistics can be an important security asset as the data may be used by
 
 We consider in this scenario that an adversary is controlling a rogue host. There
 are several possible attacks that we we will try such as:
-• INT eavesdropping;
-• INT replay;
-• INT manipulation;
+* INT eavesdropping;
+* INT replay;
+* INT manipulation;
 
 Etttercap is probably the best tool to do such attacks, so we needed to be acquainted with these sources:
 * https://linux.die.net/man/8/ettercap
@@ -281,25 +287,28 @@ ettercap -Ti h5-eth0 -M arp:oneway //10.0.3.254/ //10.0.3.4/
 <!-- ******************* WORK  IN PROGRESS ****************** -->
 
 As in this current P4 code the ARP is static, the s3 and h4 ARP tables can’t be poisoned. In the Figure 4.15 we illustrate the initial h4 ARP table and that after each poisoning message from h5, s3 replies with a gratuitous ARP message:
-![Failed ARP poisoning attempt](/picures/ettercap_attack_mininet_h4_initial_arp.png)
+![Failed ARP poisoning attempt](/pictures/ettercap_attack_mininet_h4_initial_arp.png)
 Note: if s3 does not reply to ARP, e.g. if the tables are empty, then ettercap fails with the message:
 ```
 FATAL: ARP poisoning needs a non empty hosts list.
 ```
 
-### MITM attack
+### Replay attack
 An attacker could easily do a replay attack by sending fake data towards the INT collector:
 * collect a previous INT message or craft INT stats;
 * send toward the collector;
 * spoof the IP source as the s3 gateway;
-In this case we have used a previously captured INT message and included into a small python script as the payload. We used python script .
+In this case we have used a previously captured INT message and included into a small python script as the payload. We used the python script [send replay from h5](send/send_h5_h4.py).
+
+Some info here_ https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
 
 
+#### INT manipulation
+With ettercap, we can also change the traffic in transit, however not possible due to the issue identified above
+
+## DETECTION AND PROTECTION AGAINST ATTACKS
 
 
-
-#### Replay attack
-https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
 
 
 
