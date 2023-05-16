@@ -300,12 +300,12 @@ An attacker could easily do a replay attack by sending fake data towards the INT
 * spoof the IP source as the s3 gateway;
 In this case we have used a previously captured INT message and included into a small python script as the payload. We used the python script [send replay from h5](send/send_h5_h4.py).
 This replay simulated a flow coming from h1 to h2 towards the HTTP port, hence the attacker could use it to simulate a normal working status and thus hide other attack.
-![Grafana replay attack](/pictures/grafana_replay_attack.png
+![Grafana replay attack](/pictures/grafana_replay_attack.png)
 
 Some info here_ https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
 
 
-#### INT manipulation
+### INT manipulation
 With ettercap, we can also change the traffic in transit, however not possible due to the issue identified above
 
 ## DETECTION AND PROTECTION AGAINST ATTACKS
@@ -372,8 +372,8 @@ time                dst_ip   dst_port protocol src_ip   src_port value
 1683387986735098368 10.0.3.2 80       17       10.0.1.1 57347    3666
 ```
 You may also check the logs with ```sudo journalctl -u influxdb.service | grep “POST /write”```
-#### Install Graphana
-Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
+#### Install Grafana
+Install Grafana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
 #### Add the InfluxDB datasource
 1.  In the Grafana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
 2.  Select the database int
@@ -381,7 +381,7 @@ Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/inst
 #### Import the dashboard
 This is optional, as you can build your own dashboard
 
-Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](/grafana/INT statistics.json)
+Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](grafana/INT statistics.json)
 
 ![Import the dashboard](/pictures/grafana_import_dashboard.png).
 
