@@ -298,7 +298,12 @@ An attacker could easily do a replay attack by sending fake data towards the INT
 * collect a previous INT message or craft INT stats;
 * send toward the collector;
 * spoof the IP source as the s3 gateway;
+
 In this case we have used a previously captured INT message and included into a small python script as the payload. We used the python script [send replay from h5](send/send_h5_h4.py).
+```
+python3 send/send_h5_h4.py --c100 --ip 10.0.3.4 --port 1234 --l4 udp
+```
+
 This replay simulated a flow coming from h1 to h2 towards the HTTP port, hence the attacker could use it to simulate a normal working status and thus hide other attack.
 ![Grafana replay attack](/pictures/grafana_replay_attack.png)
 
