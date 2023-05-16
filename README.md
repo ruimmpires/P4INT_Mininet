@@ -299,6 +299,8 @@ An attacker could easily do a replay attack by sending fake data towards the INT
 * send toward the collector;
 * spoof the IP source as the s3 gateway;
 In this case we have used a previously captured INT message and included into a small python script as the payload. We used the python script [send replay from h5](send/send_h5_h4.py).
+This replay simulated a flow coming from h1 to h2 towards the HTTP port, hence the attacker could use it to simulate a normal working status and thus hide other attack.
+![Grafana replay attack](/pictures/grafana_replay_attack.png
 
 Some info here_ https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
 
@@ -375,10 +377,12 @@ Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/inst
 #### Add the InfluxDB datasource
 1.  In the Grafana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
 2.  Select the database int
-3.  Test and all is ok, you will see the message ![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
+3.  Test and if all is ok, you will see the message ![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
 #### Import the dashboard
 This is optional, as you can build your own dashboard
+
 Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](/grafana/INT statistics.json)
+
 ![Import the dashboard](/pictures/grafana_import_dashboard.png).
 
 ## My lab
