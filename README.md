@@ -203,8 +203,10 @@ There are some good examples of the visualization of INT statistics all based on
 wget -q https://repos.influxdata.com/influxdata-archive_compat.key
 echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
 echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+sudo apt-get update && sudo apt-get install influxdb
 sudo systemctl unmask influxdb.service
 sudo systemctl start influxdb
+sudo pip3 install influxdb
 ```
 2. create the int database
 ```
@@ -264,8 +266,17 @@ The visualization of the INT packets in Grafana offers quick insights of the beh
 * display the same flow latency per source host. In this case h1->h2 or h3->h2;
 * display the switch latency overall and per switch;
 ![Grafana example 1](/pictures/grafana_example1.png)
-### Install Graphana
+### Install Grafana
 Install Graphana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
+```
+sudo apt-get install -y apt-transport-https
+sudo apt-get install -y software-properties-common wget
+sudo wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
+echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+sudo apt-get update
+sudo apt-get install grafana
+```
+
 ### Add the InfluxDB datasource
 1.  In the Grafana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
 2.  Select the database int
