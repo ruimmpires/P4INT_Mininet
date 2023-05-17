@@ -79,18 +79,13 @@ sudo pip3 install psutil networkx
 1. clone this repository to your machine or VM
 2. change directory to the new P4INT_Mininet folder
 3. type ```sudo make run```
-4. in the mininet CLI interface type mininet> ```xterm h1 h2 h3```
-5. in another terminal window, start the collector with ```sudo python3 receive/collector_influxdb.py``` 
-6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
-7. in the h1 type ```./send/h1.sh```  which sends traffic from h1 and creates INT statistics
-8. in the h3 type ```./send/h3.sh```  which sends traffic from h3 and creates INT statistics
 
 ### Packet source
 INT packets are only generated if a specific packet matches the watchlist. So, we used the scapy library within a python script to craft the packets. This is a simple script that takes as input parameters the destination IP, the l4 protocol UDP/TCP, the destination port number, an optional message and the number of packets sent. Additionally, we included a command to simulate recurrent accesses to the server, e.g., every 5 seconds access to HTTPS, from the h1 and h3 hosts’ CLI:
 ```
 watch -n 5 python3 send.py --ip 10.0.3.2 -l4 udp --port 443 --m INTH1 --c 1
 ```
-You can find ready-made scripts for h1 and h3 in [h1 to h2](send/h1.sh) and [h3 to h4](send/h1.sh)
+You can find ready-made scripts for h1 and h3 in [h1 to h2](send/h1.sh) and [h3 to 24](send/h3.sh)
 
 You may search for information about the scapy in [The Art of Packet Crafting with Scapy](https://0xbharath.github.io/art-of-packet-crafting-with-scapy/scapy/sending_recieving/index.html)
 
@@ -184,7 +179,7 @@ Now s3 adds its own statistics, so now we have a new package with s1 + s2 + s3 I
 ![Wireshark capture of packet leaving s3 towards h4](/pictures/wireshark_s3_eth2.png)
 
 ### Server listening
-Finally, the simulated server in h2 is preferably listening to the sent data from h1 and h3, so we used netcat to listen to the pre-determined services:
+Finally, the simulated server in h2 is preferably listening to the data sent from h1 and h3, so we used netcat to listen to the pre-determined services:
 ```
 while true; do nc -ul -p 80; done &
 echo listening on port on port 80
@@ -245,6 +240,8 @@ collected information across the switches and appends to the database measuremen
 * Switch latency: switch ID, latency in its hop , and the time when it was collected.
 * Link latency: egress switch ID, egress port ID, ingress switch ID, ingress portID, latency, and the time when it was collected. The latency is calculated as the difference between the time of the egress and the time of ingress on each switch.
 * Queue latency: switch ID, queue ID, occupancy of the flow, and the time when it was collected.
+
+In another terminal window, start the collector with ```sudo python3 receive/collector_influxdb.py``` 
 
 The script also outputs to the screen as shown in Figure:
 
