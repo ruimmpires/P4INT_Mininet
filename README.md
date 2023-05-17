@@ -314,7 +314,8 @@ Some info here_ https://itecnote.com/tecnote/python-sending-specific-hex-data-us
 With ettercap, we can also change the traffic in transit, however not possible due to the issue identified above
 
 ## DETECTION AND PROTECTION AGAINST ATTACKS
-
+- [ ] **ONGOING**
+<!-- ******************* WORK  IN PROGRESS ****************** -->
 
 
 
@@ -346,7 +347,7 @@ Using database int
 > show measurements
 ```
 No measurements are there yet. These will be created when the data is uploaded.
-### MININET
+### Mininet
 1. clone this repository to your machine or VM
 2. change directory to the new P4INT_Mininet folder
 3. type ```sudo make run```
@@ -355,7 +356,7 @@ No measurements are there yet. These will be created when the data is uploaded.
 6. in the h2 type ```./receive/h2.sh``` which simulates a server listening to HTTP, HTTPS and PostgreSQL
 7. in the h1 type ```./send/h1.sh```  which sends traffic from h1 and creates INT statistics
 8. in the h3 type ```./send/h3.sh```  which sends traffic from h3 and creates INT statistics
-#### Check InfluxDB
+### Check InfluxDB
 After having successfully generated INT stats and uploaded to the int database, you may check with:
 ```
 ~$ influx
@@ -377,13 +378,13 @@ time                dst_ip   dst_port protocol src_ip   src_port value
 1683387986735098368 10.0.3.2 80       17       10.0.1.1 57347    3666
 ```
 You may also check the logs with ```sudo journalctl -u influxdb.service | grep “POST /write”```
-#### Install Grafana
+### Install Grafana
 Install Grafana with https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/#install-from-apt-repository
-#### Add the InfluxDB datasource
+### Add the InfluxDB datasource
 1.  In the Grafana web interface, usually ```localhost:3000/```, go to Configuration > Data sources, select InfluxDB and use the default ```http://localhost:8086```
 2.  Select the database int
 3.  Test and if all is ok, you will see the message ![Scenario in Mininet](/pictures/graphana_influx_datasource_success.png)
-#### Import the dashboard
+### Import the dashboard
 This is optional, as you can build your own dashboard
 
 Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](grafana/INT statistics.json)
