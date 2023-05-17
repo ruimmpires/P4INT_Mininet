@@ -51,6 +51,30 @@ This network is simulated in mininet. Search here for more information in the [M
 ## SIMULATE AN INT PLATFORM
 This platform must create INT statistics and send those to the collector. In this scenario, if the data sent by h1 matches the watch list, then there will be some INT statistics generated and sent to h4.
 As part of the scenario, the h2 server is simulating 3 services: PostgreSQL, HTTPS and HTTP. So, the switches s1 and s5 are pre-configured as INT source and also pre-configured the match list for source and destination IPs and l4 ports: 5432 for PostgreSQL, 443 for HTTPS and 80 for HTTP.
+### Pre-requisites
+Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 8GB of RAM and 4vCPUs. Probably any Debian system should support.
+```
+sudo apt install git bridge-utils curl
+```
+#### Install Mininet
+```
+git clone https://github.com/mininet/mininet
+sudo PYTHON=python3 mininet/util/install.sh -n
+```
+#### Install P4
+For Ubuntu 20.04 and Ubuntu 21.04 it can be installed as follows:
+```
+. /etc/os-release
+  echo "deb http://download.opensuse.org/repositories/home:/p4lang/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/home:p4lang.list
+  curl -L "http://download.opensuse.org/repositories/home:/p4lang/xUbuntu_${VERSION_ID}/Release.key" | sudo apt-key add -
+  sudo apt-get update
+  sudo apt install p4lang-p4c
+```
+
+#### Install other dependencies
+```
+sudo pip3 install psutil networkx
+```
 
 ### Packet source
 NT packets are only generated if a specific packet matches the watchlist. So, we used the scapy library within a python script to craft the packets. This is a simple script that takes as input parameters the destination IP, the l4 protocol UDP/TCP, the destination port number, an optional message and the number of packets sent. Additionally, we included a command to simulate recurrent accesses to the server, e.g., every 5 seconds access to HTTPS, from the h1 and h3 hosts’ CLI:
@@ -175,6 +199,13 @@ There are some good examples of the visualization of INT statistics all based on
 
 ### Install Influxdb
 1. Install influxdb with https://docs.influxdata.com/influxdb/v1.8/introduction/install/
+```
+wget -q https://repos.influxdata.com/influxdata-archive_compat.key
+echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+sudo systemctl unmask influxdb.service
+sudo systemctl start influxdb
+```
 2. create the int database
 ```
 ~$ influx
@@ -326,9 +357,7 @@ With ettercap, we can also change the traffic in transit, however not possible d
 
 ## FAST PLAY
 You may disregard everything above and quickly start this mininet environment!
-### Pre-requisites
-Tested in a VMWare virtualized Ubuntu 20.04LTS with 35GB of storage, 16GB of RAM and 8vCPUs. Probably any Debian system should support.
-sudo apt install bridge-utils
+
 ### Install Influxdb
 1. Install influxdb with https://docs.influxdata.com/influxdb/v1.8/introduction/install/
 2. create the int database
