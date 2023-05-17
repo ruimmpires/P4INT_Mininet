@@ -314,6 +314,11 @@ This is optional, as you can build your own dashboard.
 Go to Home > Dashboards > Import dashboard and upload the [Grafana dashboard json](grafana/INT statistics.json)
 
 ![Import the dashboard](/pictures/grafana_import_dashboard.png).
+
+Note: make sure the collector is syncronized with an ntp or rather manually syn with the command:
+```
+sudo date -s "00:23"
+```
 ### Some tests
 Note: the network was pre-defined with slower speed for the packets coming from h3 with bandwith commands in the [network configuration](network.py). 
 So, if you do basic iperf tests from the mininet window you will get similar data as:
