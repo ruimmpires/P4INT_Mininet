@@ -352,20 +352,6 @@ Etttercap is probably the best tool to do such attacks, so we needed to be acqua
 * https://github.com/Ettercap/ettercap/wiki/Providing-debug-information
 * https://github.com/Ettercap/ettercap/issues/1121
 
-### INT eavesdropping
-In this scenario, the adversary will try to listen to the traffic using tools like ettercap. We used ettercap to do the ARP poisoning and thus mislead both the switch as well as the host to send the data to the rogue host. This is simple MITM attack, that starts with eavesdropping:
-```
-ettercap -Ti h5-eth0 -M arp:oneway //10.0.3.254/ //10.0.3.4/
-```
-- [ ] **ONGOING**
-<!-- ******************* WORK  IN PROGRESS ****************** -->
-
-As in this current P4 code the ARP is static, the s3 and h4 ARP tables can’t be poisoned. In the Figure 4.15 we illustrate the initial h4 ARP table and that after each poisoning message from h5, s3 replies with a gratuitous ARP message:
-![Failed ARP poisoning attempt](/pictures/ettercap_attack_mininet_h4_initial_arp.png)
-Note: if s3 does not reply to ARP, e.g. if the tables are empty, then ettercap fails with the message:
-```
-FATAL: ARP poisoning needs a non empty hosts list.
-```
 
 ### Replay attack
 An attacker could easily do a replay attack by sending fake data towards the INT collector:
@@ -382,6 +368,23 @@ This replay simulated a flow coming from h1 to h2 towards the HTTP port, hence t
 ![Grafana replay attack](/pictures/grafana_replay_attack.png)
 
 Some info here_ https://itecnote.com/tecnote/python-sending-specific-hex-data-using-scapy/
+
+### INT eavesdropping
+In this scenario, the adversary will try to listen to the traffic using tools like ettercap. We used ettercap to do the ARP poisoning and thus mislead both the switch as well as the host to send the data to the rogue host. This is simple MITM attack, that starts with eavesdropping:
+```
+ettercap -Ti h5-eth0 -M arp:oneway //10.0.3.254/ //10.0.3.4/
+```
+- [ ] **ONGOING**
+<!-- ******************* WORK  IN PROGRESS ****************** -->
+
+As in this current P4 code the ARP is static, the s3 and h4 ARP tables can’t be poisoned. In the Figure 4.15 we illustrate the initial h4 ARP table and that after each poisoning message from h5, s3 replies with a gratuitous ARP message:
+![Failed ARP poisoning attempt](/pictures/ettercap_attack_mininet_h4_initial_arp.png)
+Note: if s3 does not reply to ARP, e.g. if the tables are empty, then ettercap fails with the message:
+```
+FATAL: ARP poisoning needs a non empty hosts list.
+```
+
+
 
 
 ### INT manipulation
@@ -400,5 +403,9 @@ With ettercap, we can also change the traffic in transit, however not possible d
 
 
 
-## My lab
+## My labs
 If you have access to the FCTUC/DEI VPN or are locally connected, you may see the stats here http://10.254.0.171:3000/d/V8Ss1QY4k/int-statistics?orgId=1&refresh=1m&from=now-15m&to=now with the credentials readonly/readonly.
+and here http://10.254.0.166:3000/d/V8Ss1QY4k/int-statistics?orgId=1&refresh=1m
+
+## Other resources
+https://linuxhint.com/tcpdump-beginner-guide-2/
