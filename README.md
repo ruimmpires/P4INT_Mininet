@@ -409,3 +409,6 @@ and here http://10.254.0.166:3000/d/V8Ss1QY4k/int-statistics?orgId=1&refresh=1m
 
 ## Other resources
 https://linuxhint.com/tcpdump-beginner-guide-2/
+https://manpages.ubuntu.com/manpages/bionic/man8/ettercap.8.html
+https://github.com/Ettercap/ettercap/blob/master/share/etter.filter.examples
+https://www.irongeek.com/i.php?page=security/ettercapfilter
