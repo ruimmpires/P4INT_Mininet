@@ -412,3 +412,4 @@ https://linuxhint.com/tcpdump-beginner-guide-2/
 https://manpages.ubuntu.com/manpages/bionic/man8/ettercap.8.html
 https://github.com/Ettercap/ettercap/blob/master/share/etter.filter.examples
 https://www.irongeek.com/i.php?page=security/ettercapfilter
+https://nmap.org/book/toc.html
