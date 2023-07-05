@@ -253,11 +253,10 @@ These measurements are appended to a Influx database running on the host machine
 
 ### Wireshark INT P4 dissector
 The INT packets can be also analyzed in Wireshark, but it is helpful to have an appropriate decoder for this special packets. This decoder is called a dissector which needs to be built specifically for each implementation.
-- [ ] **ONGOING**
-<!-- ******************* WORK  IN PROGRESS ****************** -->
-As a first approach, we used an incomplete decoder as described in the following capture:
-![capture of an INT P4 Wireshark dissector](/pictures/int_packet_udp_1234_wireshark_dissector.png)
 
+As a first approach, you may use my decoder as described in the following capture:
+![capture of an INT P4 Wireshark dissector](/pictures/int_packet_udp_1234_wireshark_dissector.png)
+This decoder can only be applied after the INT sink, as it applies to the INT report packet. 
 Some ideas:
 * [P4_Wireshark_Dissector](https://github.com/gnikol/P4-Wireshark-Dissector)
 * [P4_INT_Wireshark_Dissector](https://github.com/MehmedGIT/P4_INT_Wireshark_Dissector/blob/master/int_telemetry-report.lua)
