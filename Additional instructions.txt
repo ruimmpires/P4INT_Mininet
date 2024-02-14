@@ -1,0 +1,20 @@
+#After installing/preparing everyting just like the Readme file indicated, have influxDB runnig
+
+
+# Run the following commands in a terminal
+sudo make run
+
+# Run the following commands in another terminal
+sudo python collector_influxdb.py 
+
+
+# At a h1 terminal run:
+python receive/receive.py 
+
+# At a h2 terminal run:
+python send/send.py --ip 10.0.3.2 --l4 udp --port 443 --m INTH1 --c 1
+
+
+#The generated telemetry should be visible in the grafana dashboard
+```
+

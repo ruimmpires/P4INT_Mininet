@@ -28,7 +28,7 @@ control MyIngress(inout headers hdr,
             arpreply.apply(hdr, local_metadata, standard_metadata);
         }
         else if(hdr.ipv4.isValid()) {
-            arplearn.apply(hdr, local_metadata, standard_metadata);
+            //arplearn.apply(hdr, local_metadata, standard_metadata);
             l3_forward.apply(hdr, local_metadata, standard_metadata);
         
             if(hdr.udp.isValid() ) {

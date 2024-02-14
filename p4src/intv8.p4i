@@ -1,7 +1,7 @@
-# 1 "/home/rpires/intv8/p4src/intv8.p4"
-# 1 "<built-in>"
-# 1 "<command-line>"
-# 1 "/home/rpires/intv8/p4src/intv8.p4"
+# 0 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4"
+# 0 "<built-in>"
+# 0 "<command-line>"
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4"
 /* -*- P4_16 -*- */
 # 1 "/usr/share/p4c/p4include/core.p4" 1
 /*
@@ -97,7 +97,7 @@ extern bool static_assert(bool check, string message);
 
 /// Like the above but using a default message.
 extern bool static_assert(bool check);
-# 3 "/home/rpires/intv8/p4src/intv8.p4" 2
+# 3 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
 # 1 "/usr/share/p4c/p4include/v1model.p4" 1
 /*
 Copyright 2013-present Barefoot Networks, Inc.
@@ -883,8 +883,8 @@ package V1Switch<H, M>(Parser<H, M> p,
                        ComputeChecksum<H, M> ck,
                        Deparser<H> dep
                        );
-# 4 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/arp.p4" 1
+# 4 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/arp.p4" 1
 header arp_t {
   bit<16> h_type;
   bit<16> p_type;
@@ -901,8 +901,8 @@ struct digest_t {
     bit<48> src_addr;
     bit<9> in_port;
 }
-# 5 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/defines.p4" 1
+# 5 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/defines.p4" 1
 
 
 
@@ -924,7 +924,7 @@ const bit<16> ARP_REQ = 1; // Operation 1 is request
 const bit<16> ARP_REPLY = 2; // Operation 2 is reply
 
 //packet type
-# 30 "/home/rpires/intv8/p4src/defines.p4"
+# 30 "/media/sf_Tese/Code/P4INT_Mininet/p4src/defines.p4"
 typedef bit<48> mac_t;
 typedef bit<32> ip_address_t;
 typedef bit<16> l4_port_t;
@@ -948,8 +948,8 @@ const bit<8> CPU_MIRROR_SESSION_ID = 250;
 const bit<32> REPORT_MIRROR_SESSION_ID = 500;
 const bit<6> HW_ID = 1;
 const bit<8> REPORT_HDR_TTL = 64;
-# 6 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/headers.p4" 1
+# 6 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/headers.p4" 1
 
 
 
@@ -998,8 +998,8 @@ header udp_t {
     bit<16> checksum;
 }
 const bit<8> UDP_HEADER_LEN = 8;
-# 7 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/int_headers.p4" 1
+# 7 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/int_headers.p4" 1
 
 
 
@@ -1205,8 +1205,8 @@ struct local_metadata_t {
     preserving_metadata_t perserv_meta;
     digest_t mac_learn_digest; //ARP
 }
-# 8 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/parser.p4" 1
+# 8 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/parser.p4" 1
 /*************************************************************************
 *********************** P A R S E R  *******************************
 *************************************************************************/
@@ -1317,11 +1317,11 @@ control MyDeparser(packet_out packet, in headers hdr) {
 
     }
 }
-# 9 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/checksum.p4" 1
+# 9 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/checksum.p4" 1
 
-# 1 "/home/rpires/intv8/p4src/int_headers.p4" 1
-# 3 "/home/rpires/intv8/p4src/checksum.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/int_headers.p4" 1
+# 3 "/media/sf_Tese/Code/P4INT_Mininet/p4src/checksum.p4" 2
 
 control MyVerifyChecksum(inout headers hdr, inout local_metadata_t local_metadata) {
     apply { }
@@ -1370,8 +1370,8 @@ control MyComputeChecksum(inout headers hdr, inout local_metadata_t local_metada
         // #endif // __INT_HEADERS__
     }
 }
-# 10 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/forward.p4" 1
+# 10 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/forward.p4" 1
 
 
 
@@ -1528,8 +1528,8 @@ control arplearn(inout headers hdr,
         mac_learn.apply();
         }
 }
-# 11 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/int_source.p4" 1
+# 11 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/int_source.p4" 1
 /* -*- P4_16 -*- */
 control process_int_source_sink (
     inout headers hdr,
@@ -1640,8 +1640,8 @@ control process_int_source (
         tb_int_source.apply();
     }
 }
-# 12 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/int_transit.p4" 1
+# 12 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/int_transit.p4" 1
 control process_int_transit (
     inout headers hdr,
     inout local_metadata_t local_metadata,
@@ -2055,8 +2055,8 @@ control process_int_transit (
         }
     }
 }
-# 13 "/home/rpires/intv8/p4src/intv8.p4" 2
-# 1 "/home/rpires/intv8/p4src/int_sink.p4" 1
+# 13 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
+# 1 "/media/sf_Tese/Code/P4INT_Mininet/p4src/int_sink.p4" 1
 /* -*- P4_16 -*- */
 
 control process_int_sink (
@@ -2195,6 +2195,9 @@ control process_int_report (
     }
 
     table tb_generate_report {
+        key = { //needs at least a key
+            16w0 : exact; //dummy key to trigger the action
+        }
         actions = {
             do_report_encapsulation;
             NoAction();
@@ -2206,7 +2209,7 @@ control process_int_report (
         tb_generate_report.apply();
     }
 }
-# 14 "/home/rpires/intv8/p4src/intv8.p4" 2
+# 14 "/media/sf_Tese/Code/P4INT_Mininet/p4src/intv8.p4" 2
 
 
 
@@ -2224,7 +2227,7 @@ control MyIngress(inout headers hdr,
             arpreply.apply(hdr, local_metadata, standard_metadata);
         }
         else if(hdr.ipv4.isValid()) {
-            arplearn.apply(hdr, local_metadata, standard_metadata);
+            //arplearn.apply(hdr, local_metadata, standard_metadata);
             l3_forward.apply(hdr, local_metadata, standard_metadata);
 
             if(hdr.udp.isValid() ) {

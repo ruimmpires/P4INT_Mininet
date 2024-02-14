@@ -136,6 +136,9 @@ control process_int_report (
     }
 
     table tb_generate_report {
+        key = {              //needs at least a key
+            16w0 : exact;    //dummy key to trigger the action
+        }
         actions = {
             do_report_encapsulation;
             NoAction();

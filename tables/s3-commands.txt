@@ -12,7 +12,9 @@ table_add process_int_source_sink.tb_set_sink int_set_sink 1 =>
 
 //INT report setup towards the INT collector
 //table_add process_int_report.tb_generate_report do_report_encapsulation => 00:01:0a:00:03:07 00:01:0a:00:03:0A 10.0.0.1 10.0.0.2 1234
-table_add process_int_report.tb_generate_report do_report_encapsulation => 00:01:0a:00:03:05 00:00:0a:00:03:04 10.0.3.254 10.0.3.4 1234
+//table_add process_int_report.tb_generate_report do_report_encapsulation => 00:01:0a:00:03:05 00:00:0a:00:03:02 10.0.3.254 10.0.3.4 1234
+table_add process_int_report.tb_generate_report do_report_encapsulation 0 => 00:01:0a:00:03:05 00:00:0a:00:03:02 10.0.3.254 10.0.3.4 1234
+
 
 
 //set up switch ID
